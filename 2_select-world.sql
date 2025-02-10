@@ -1,3 +1,6 @@
+
+
+--                                      world
 -- name	            continent	    area	        population	        gdp
 -- Afghanistan	        Asia	        652230	        25500100	        20343000000
 -- Albania	            Europe	        28748	        2831741	            12960000000
