@@ -246,13 +246,11 @@ ORDER BY COUNT(casting.actorid) DESC, movie.title;
 SELECT name
 FROM actor actor
 JOIN casting c on c.actorid = a.id 
-JOIN movie m on c.movieid = m.id
 WHERE m.id IN 
 (
-    SELECT m.id
+    SELECT c.movieid
     FROM actor a 
     JOIN casting c on c.actorid = a.id 
-    JOIN movie m on c.movieid = m.id
     WHERE a.name = "Art Garfunkel"
 )
 AND name != "Art Garfunkel";
