@@ -126,3 +126,37 @@ FROM teacher t
 RIGHT JOIN dept d
 ON t.dept = d.id
 GROUP BY d.name;
+
+
+
+-- 9:
+
+
+-- Use CASE to show the name of each teacher followed by 'Sci' if the teacher is in dept 1 or 2 and 'Art' otherwise.
+
+
+
+SELECT name,
+CASE
+  WHEN dept IN (1, 2) THEN "Sci"
+  ELSE "Art"
+End
+FROM teacher;
+
+
+
+-- 10:
+
+
+-- Use CASE to show the name of each teacher followed by 'Sci' if the teacher is in dept 1 or 2, show 'Art' if the teacher's dept is 3 and 'None' otherwise.
+
+
+
+
+SELECT name,
+CASE
+  WHEN dept IN (1, 2) THEN "Sci"
+  WHEN dept = 3 THEN "Art"
+  ELSE "None"
+End
+FROM teacher;
