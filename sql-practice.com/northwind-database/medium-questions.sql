@@ -1,5 +1,6 @@
 -- 1: Show the ProductName, CompanyName, CategoryName from the products, suppliers, and categories table
 
+
 SELECT p.product_name, s.company_name, c.category_name
 FROM categories c
 JOIN products p
@@ -9,6 +10,7 @@ ON p.supplier_id = s.supplier_id;
 
 
 -- 2: Show the category_name and the average product unit price for each category rounded to 2 decimal places.
+
 
 SELECT category_name, ROUND(AVG(unit_price), 2)
 FROM categories c
