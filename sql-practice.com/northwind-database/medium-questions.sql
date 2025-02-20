@@ -9,7 +9,7 @@ JOIN suppliers s
 ON p.supplier_id = s.supplier_id;
 
 
--- 2: Show the category_name and the average product unit price for each category rounded to 2 decimal places.
+-- 2 (REPEAT): Show the category_name and the average product unit price for each category rounded to 2 decimal places.
 
 
 SELECT category_name, ROUND(AVG(unit_price), 2)
@@ -19,7 +19,7 @@ ON c.category_id = p.category_id
 GROUP BY category_name;
 
 
--- 3: Show the city, company_name, contact_name from the customers and suppliers table merged together.
+-- 3 (REPEAT): Show the city, company_name, contact_name from the customers and suppliers table merged together.
 -- Create a column which contains 'customers' or 'suppliers' depending on the table it came from.
 
 
@@ -31,7 +31,7 @@ FROM suppliers
 
 
 
--- 4: Show the total amount of orders for each year/month.
+-- 4 (REPEAT): Show the total amount of orders for each year/month.
 
 
 SELECT year(order_date), month(order_date), COUNT(order_date)
