@@ -3,12 +3,12 @@
 SELECT COUNT(*) as patients_in_group, 
 FLOOR(weight / 10) * 10 as weight_group
 FROM patients
-group by  weight_group
+GROUP BY  weight_group
 ORDER BY weight_group DESC
 
 
 
--- 2: Show patient_id, weight, height, isObese from the patients table. 
+-- 2: Show patient_id, weight, height, isObese FROM the patients table. 
 -- Display isObese as a boolean 0 or 1.
 -- Obese is defined as weight(kg)/(height(m)2) >= 30.
 -- weight is in units kg.
@@ -95,4 +95,99 @@ FROM admissions
 WHERE patient_id % 2 = 0 
 GROUP BY has_insurance;
 
+
+
+-- 4: Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name
+
+
+SELECT pn.province_name
+FROM province_names pn
+JOIN patients p ON pn.province_id = p.province_id
+GROUP BY pn.province_name
+HAVING SUM(CASE WHEN p.gender = 'M' THEN 1 ELSE 0 END) > 
+SUM(CASE WHEN p.gender = 'F' THEN 1 ELSE 0 END);
+
+
+-- 5: We are looking for a specific patient. Pull all columns for the patient who matches the following criteria:
+
+-- First_name contains an 'r' after the first two letters.
+-- Identifies their gender as 'F'
+-- Born in February, May, or December
+-- Their weight would be between 60kg and 80kg
+-- Their patient_id is an odd number
+-- They are FROM the city 'Kingston'
+
+
+SELECT * 
+FROM patients
+WHERE first_name LIKE "__r%" 
+AND 
+gender = "F" 
+AND 
+MONTH(birth_date) IN (02, 05, 12) 
+AND 
+weight BETWEEN 60 AND 80 
+AND 
+patient_id % 2 != 0
+AND 
+city = "Kingston";
+
+
+
+-- 6: Show the percent of patients that have 'M' as their gender. Round the answer to the nearest hundreth number and in percent form.
+
+SELECT distinct
+    CONCAT(ROUND(((SELECT COUNT(*) FROM patients WHERE gender = 'M') * 1.0 /
+    (SELECT COUNT(*) FROM patients)) * 100, 2), "%")
+FROM patients;
+
+
+-- 7: For each day display the total amount of admissions on that day. Display the amount changed FROM the previous date.
+
+
+SELECT
+ admission_date,
+ count(admission_date) as admission_day,
+ count(admission_date) - LAG(count(admission_date)) OVER(ORDER BY admission_date) AS admission_count_change 
+FROM admissions
+GROUP BY admission_date
+
+
+
+ -- 8: Sort the province names in ascending order in such a way that the province 'Ontario' is always on top.
+
+
+SELECT province_name
+FROM province_names
+ORDER BY (case WHEN province_name = 'Ontario' THEN 0 ELSE 1 END), province_name;
+
+
+SELECT province_name
+FROM province_names
+ORDER BY (NOT province_name = 'Ontario'), province_name;
+
+
+SELECT province_name
+FROM province_names
+ORDER BY province_name = 'Ontario' DESC, province_name;
+
+
+SELECT province_name
+FROM province_names
+ORDER BY
+  CASE
+    WHEN province_name = 'Ontario' THEN 1
+    ELSE province_name
+  END;
+
+
+-- 9: We need a breakdown for the total amount of admissions each doctor has started each year. Show the doctor_id, doctor_full_name, specialty, year, total_admissions for that year.
+
+
+SELECT d.doctor_id, concat(d.first_name, " ", d.last_name) AS doctor_name, d.specialty, 
+YEAR(a.admission_date) AS selected_year, COUNT(*) AS total_admissions
+FROM admissions a 
+JOIN doctors d 
+ON a.attending_doctor_id = d.doctor_id
+GROUP BY d.doctor_id, selected_year;
 
