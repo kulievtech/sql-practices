@@ -74,3 +74,25 @@ HAVING COUNT(*) > w.Capacity;
 
 
 -- In SQL, when you use aggregate functions like COUNT(*) in combination with the GROUP BY clause, you need to group by all non-aggregated columns that appear in the SELECT clause or the HAVING clause. This ensures that the query can correctly calculate the aggregate values for each group.
+
+
+
+-- 10. Select the codes of all the boxes located in Chicago.
+
+SELECT Code
+FROM BOXES
+WHERE Warehouse IN (
+    SELECT Code
+    FROM Warehouses
+    WHERE Location = "Chicago"
+);
+
+
+-- OR
+
+
+SELECT b.Code 
+FROM BOXES b 
+JOIN Warehouses w 
+ON b.Warehouse = w.Code 
+WHERE w.Location = "Chicago";
