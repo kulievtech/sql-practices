@@ -96,3 +96,53 @@ FROM BOXES b
 JOIN Warehouses w 
 ON b.Warehouse = w.Code 
 WHERE w.Location = "Chicago";
+
+
+-- 11. Create a new warehouse in New York with a capacity for 3 boxes.
+
+INSERT INTO Warehouses (Location, Capacity)
+VALUES ("New York", 3)
+
+
+-- 12. Create a new box, with code "H5RT", containing "Papers" with a value of $200, and located in warehouse 2.
+
+INSERT INTO Boxes (Code, Contents, Value, Warehouse)
+VALUES ("H5RT", "Papers", 200, 2)
+
+
+-- 13. Reduce the value of all boxes by 15%.
+
+UPDATE Boxes
+SET Value = Value - (Value * 0.15)
+
+
+-- 14. Apply a 20% value reduction to boxes with a value larger than the average value of all the boxes.
+
+UPDATE Boxes 
+SET Value = Value - (Value * 0.20)
+WHERE Value > (
+    SELECT AVG(Value)
+    FROM Boxes
+);
+
+
+
+-- 15. Remove all boxes with a value lower than $100.
+
+DELETE FROM Boxes
+WHERE Value < 100;
+
+
+-- 16. Remove all boxes from saturated warehouses. (a warehouse is saturated if the number of boxes in it is larger than the warehouse's capacity)
+
+DELETE FROM Boxes
+WHERE warehouse_id IN (
+    SELECT w.warehouse_id
+    FROM Warehouses w
+    JOIN (
+        SELECT warehouse_id, COUNT(box_id) AS box_count
+        FROM Boxes
+        GROUP BY warehouse_id
+    ) b ON w.warehouse_id = b.warehouse_id
+    WHERE b.box_count > w.capacity
+);
